@@ -1,14 +1,11 @@
 import React from 'react';
-import Jumbotron from './Jumbotron';
-import Menu from './Menu';
-import Navbar from './Navbar';
+import Login from './Login';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
     <div>
-      <Navbar />
-      <Jumbotron />
-      <Menu />
+      <Login />
     </div>
   );
 }
