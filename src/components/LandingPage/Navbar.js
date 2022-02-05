@@ -60,7 +60,7 @@ function NavigationBar() {
         <Navbar.Collapse className="justify-content-end">
           <Stack direction="horizontal" gap={3}>
             <Button value="login" className='px-5' variant="outline-danger" onClick={() => setLoginShow(true)}>Login</Button>{' '}
-            <Button value="register" className='px-5' variant="danger" onClick={() => setRegisterShow(true)}>Register</Button>{' '}
+            <Button value="register" className='px-5 bg-2' variant="danger" onClick={() => setRegisterShow(true)}>Register</Button>{' '}
           </Stack>
         </Navbar.Collapse>
       </Container>

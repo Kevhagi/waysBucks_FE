@@ -9,3 +9,11 @@
 .pink{
     background-color: pink;
 }
+
+.bg-1{
+    background: rgba(224, 200, 200, 0.25);
+}
+
+.bg-2{
+    background: #BD0707;
+}
