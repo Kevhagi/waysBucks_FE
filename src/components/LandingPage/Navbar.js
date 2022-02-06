@@ -4,12 +4,10 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import Stack from 'react-bootstrap/Stack'
 import Modal from 'react-bootstrap/Modal'
-import Login from './Login'
-import Register from './Register'
+import { InputGroup, FormControl } from 'react-bootstrap'
 import img from './img/logo.svg'
 
 function MyLoginModal(props) {
-
   return (
     <Modal
       {...props}
@@ -18,7 +16,29 @@ function MyLoginModal(props) {
       centered
     >
       <Modal.Body>
-        <Login />
+      <div className='px-5'>
+        <h1 className='text-danger py-4 fw-bold'>Login</h1>
+
+        <div className='d-flex flex-column'>
+            <InputGroup className='py-1 mb-3'>
+                <FormControl className='border border-danger bg-light'
+                    type='email'
+                    placeholder="Email"
+                    aria-label="Email"
+                />
+            </InputGroup>
+            <InputGroup className='py-1 mb-3'>
+                <FormControl className='border border-danger bg-light'
+                    type='password'
+                    placeholder="Password"
+                    aria-label="Password"
+                />
+            </InputGroup>
+            <Button variant="danger" className='px-3 py-2 mb-4'>Login</Button>
+        </div>
+
+        <center className='pb-4'>Don't have an account? Klik <span className='text-decoration-none text-black fw-bold' style={{cursor:"pointer"}}> Here</span></center>
+      </div>
       </Modal.Body>
     </Modal>
   );
@@ -34,7 +54,35 @@ function MyRegisterModal(props) {
       centered
     >
       <Modal.Body>
-        <Register />
+      <div className='loginBox px-5'>
+        <h1 className='text-danger py-4 fw-bold'>Register</h1>
+
+        <div className='loginInput d-flex flex-column'>
+            <InputGroup className='py-1 mb-3'>
+                <FormControl className='border border-danger bg-light'
+                    type='email'
+                    placeholder="Email"
+                    aria-label="Email"
+                />
+            </InputGroup>
+            <InputGroup className='py-1 mb-3'>
+                <FormControl className='border border-danger bg-light'
+                    type='password'
+                    placeholder="Password"
+                    aria-label="Password"
+                />
+            </InputGroup>
+            <InputGroup className='py-1 mb-3'>
+                <FormControl className='border border-danger bg-light'
+                    placeholder="Full Name"
+                    aria-label="Full Name"
+                />
+            </InputGroup>
+            <Button variant="danger" className='px-3 py-2 mb-4'>Register</Button>
+        </div>
+
+        <center className='pb-4'>Already have an account? Klik <span className='text-decoration-none text-black fw-bold' style={{cursor:"pointer"}}> Here</span></center>
+      </div>
       </Modal.Body>
     </Modal>
   );
