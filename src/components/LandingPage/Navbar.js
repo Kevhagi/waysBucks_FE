@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Navbar from 'react-bootstrap/Navbar'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
@@ -7,7 +7,9 @@ import Modal from 'react-bootstrap/Modal'
 import { InputGroup, FormControl } from 'react-bootstrap'
 import img from './img/logo.svg'
 
+
 function MyLoginModal(props) {
+
   return (
     <Modal
       {...props}
@@ -37,7 +39,7 @@ function MyLoginModal(props) {
             <Button variant="danger" className='px-3 py-2 mb-4'>Login</Button>
         </div>
 
-        <center className='pb-4'>Don't have an account? Klik <span className='text-decoration-none text-black fw-bold' style={{cursor:"pointer"}}> Here</span></center>
+        <center className='pb-4'>Don't have an account? Klik <span className='text-decoration-none text-black fw-bold' style={{cursor:"pointer"}} onClick={props.switchToRegister}> Here</span></center>
       </div>
       </Modal.Body>
     </Modal>
@@ -81,7 +83,7 @@ function MyRegisterModal(props) {
             <Button variant="danger" className='px-3 py-2 mb-4'>Register</Button>
         </div>
 
-        <center className='pb-4'>Already have an account? Klik <span className='text-decoration-none text-black fw-bold' style={{cursor:"pointer"}}> Here</span></center>
+        <center className='pb-4'>Already have an account? Klik <span className='text-decoration-none text-black fw-bold' style={{cursor:"pointer"}} onClick={props.switchToLogin}> Here</span></center>
       </div>
       </Modal.Body>
     </Modal>
@@ -92,6 +94,17 @@ function MyRegisterModal(props) {
 function NavigationBar() {
   const [loginShow, setLoginShow] = React.useState(false);
   const [registerShow, setRegisterShow] = React.useState(false);
+
+  function handleSwitchLogin(){
+    setLoginShow(false)
+    setRegisterShow(true)
+  }
+
+  function handleSwitchRegister(){
+    setLoginShow(true)
+    setRegisterShow(false)
+  }
+
   return (
     <Navbar>
       <Container>
@@ -116,11 +129,13 @@ function NavigationBar() {
       <MyLoginModal
         show={loginShow}
         onHide={() => setLoginShow(false)}
+        switchToRegister={handleSwitchLogin}
       />
 
       <MyRegisterModal
         show={registerShow}
         onHide={() => setRegisterShow(false)}
+        switchToLogin={handleSwitchRegister}
       />
     </Navbar>
   )
