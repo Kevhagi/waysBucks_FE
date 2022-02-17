@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import Navbar from '../components/LandingPage/Navbar'
 import Jumbotron from '../components/LandingPage/Jumbotron';
 import Menu from '../components/LandingPage/Menu'

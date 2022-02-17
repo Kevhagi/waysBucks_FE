@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { UserContext } from '../../context/userContext'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import Navbar from 'react-bootstrap/Navbar'
 import Container from 'react-bootstrap/Container'
@@ -11,6 +11,9 @@ import { InputGroup, FormControl } from 'react-bootstrap'
 import img from './img/logo.svg'
 import cart from './img/cart.svg'
 import profilePic from './img/erisqu.jpg'
+import profile from './img/profile.svg'
+import logoutImg from './img/logout.svg'
+import 'bootstrap/js/dist/dropdown'
 
 import {API} from '../../config/api'
 
@@ -49,7 +52,6 @@ function MyLoginModal(props) {
 
       //Insert data
       const response = await API.post("/login", body, config)
-      console.log(response.data.data.user);
       
       if (response?.status == 200) {
         // Send data to useContext
@@ -60,7 +62,7 @@ function MyLoginModal(props) {
 
         /*
         // Status check
-        if (response.data.data.status == "admin") {
+        if (response.data.data.role == "admin") {
           history.push("/complain-admin");
         } else {
           history.push("/");
@@ -74,6 +76,8 @@ function MyLoginModal(props) {
         setMessage(alert);
         */
       }
+
+      console.log(state);
     
     } catch (error) {
       let errorAlert = error.response.request.response
@@ -267,6 +271,19 @@ function NavigationBar() {
     setRegisterShow(false)
   }
 
+  let navigate = useNavigate()
+
+  const logout = () => {
+    dispatch({
+      type: "LOGOUT",
+    });
+    navigate("/")
+  };
+
+  const goToProfile = () => {
+    navigate("/profile")
+  }
+
   return (
     <Navbar>
       <Container>
@@ -284,7 +301,35 @@ function NavigationBar() {
           {state.isLogin 
           ? <Stack direction="horizontal" gap={4}>
               <img src={cart} width="35" height="35" alt="my-cart" />
-              <img src={profilePic} width="60" height="60" className='rounded-circle border border-4 border-danger' alt="profilepic" />
+
+              <div class="btn-group">
+                <button class="btn shadow-none pe-0" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src={profilePic} width="60" height="60" className='rounded-circle border border-4 border-danger' alt="profilepic" />
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                  <li onClick={goToProfile} className='d-flex align-items-center border-1 border-secondary border-bottom'>
+                    <button class="btn shadow-none px-3 pe-5 py-4 d-flex align-items-center">
+                      <div>
+                        <img src={profile} width="40" height="40" alt="profile" />
+                      </div>
+                      <div className='ms-3'>
+                        Profile
+                      </div>
+                    </button>
+                  </li>
+                  <li onClick={logout} className='d-flex border-1 border-secondary border-top'>
+                    <button class="btn shadow-none px-4 pe-5 py-4 d-flex align-items-center">
+                      <div>
+                        <img src={logoutImg} width="40" height="40" alt="logout" />
+                      </div>
+                      <div className='ms-2'>
+                        Logout
+                      </div>
+                    </button>
+                    
+                  </li>  
+                </ul>
+              </div>
             </Stack>
           : <Stack direction="horizontal" gap={3}>
               <Button value="login" className='px-5' variant="outline-danger" onClick={() => setLoginShow(true)}>Login</Button>{' '}
@@ -308,5 +353,7 @@ function NavigationBar() {
     </Navbar>
   )
 }
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
 export default NavigationBar;
