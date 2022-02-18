@@ -2,12 +2,7 @@ import React, { useContext, useState } from 'react';
 import { UserContext } from '../../context/userContext'
 import { useNavigate } from 'react-router-dom'
 
-import Navbar from 'react-bootstrap/Navbar'
-import Container from 'react-bootstrap/Container'
-import Button from 'react-bootstrap/Button'
-import Stack from 'react-bootstrap/Stack'
-import Modal from 'react-bootstrap/Modal'
-import { InputGroup, FormControl } from 'react-bootstrap'
+import { InputGroup, FormControl, Modal, Navbar, Container, Button, Stack } from 'react-bootstrap'
 import img from './img/logo.svg'
 import cart from './img/cart.svg'
 import profilePic from './img/erisqu.jpg'
@@ -30,6 +25,8 @@ function MyLoginModal(props) {
   })
 
   const { email, password } = form
+
+  let navigate = useNavigate()
 
   const handleChange = (e) => {
     setForm({
@@ -62,14 +59,16 @@ function MyLoginModal(props) {
           payload: response.data.data.user,
         });
 
-        /*
+        console.log(response.data.data.user.role);
+
         // Status check
-        if (response.data.data.role == "admin") {
-          history.push("/complain-admin");
+        if (response.data.data.user.role == "Admin") {
+          navigate("/transactions");
         } else {
-          history.push("/");
+          navigate("/");
         }
 
+        /*
         const alert = (
           <Alert variant="success" className="py-1">
             Login success
@@ -78,8 +77,6 @@ function MyLoginModal(props) {
         setMessage(alert);
         */
       }
-
-      console.log(state);
     
     } catch (error) {
       let errorAlert = error.response.request.response
@@ -256,13 +253,11 @@ function MyRegisterModal(props) {
   );
 }
 
-
 function NavigationBar() {
   const [loginShow, setLoginShow] = React.useState(false);
   const [registerShow, setRegisterShow] = React.useState(false);
 
   const [state, dispatch] = useContext(UserContext);
-  console.log(state);
 
   function handleSwitchLogin(){
     setLoginShow(false)
@@ -298,16 +293,49 @@ function NavigationBar() {
   return (
     <Navbar>
       <Container>
-        <Navbar.Brand href="/">
-          <img
-            src={img}
-            width="80"
-            height="80"
-            className="d-inline-block align-top"
-            alt="Logo WaysBucks"
-          />
-        </Navbar.Brand>
-        <Navbar.Toggle />
+        {
+          ( () => {
+            if(state.isLogin){
+              if(state.user.role == "Admin"){
+              return(
+                <Navbar.Brand href="/transactions">
+                  <img
+                    src={img}
+                    width="80"
+                    height="80"
+                    className="d-inline-block align-top"
+                    alt="Logo WaysBucks"
+                  />
+                </Navbar.Brand>
+              )
+              } else if (state.user.role == "Customer"){
+              return(
+                <Navbar.Brand href="/">
+                  <img
+                    src={img}
+                    width="80"
+                    height="80"
+                    className="d-inline-block align-top"
+                    alt="Logo WaysBucks"
+                  />
+                </Navbar.Brand>
+              )
+              }
+            } else {
+            return(
+              <Navbar.Brand href="/">
+                <img
+                  src={img}
+                  width="80"
+                  height="80"
+                  className="d-inline-block align-top"
+                  alt="Logo WaysBucks"
+                />
+              </Navbar.Brand>
+            )
+            }
+          })()
+        }
         <Navbar.Collapse className="justify-content-end">
         {
           ( () => {
@@ -321,7 +349,7 @@ function NavigationBar() {
                     <img src={profilePic} width="60" height="60" className='rounded-circle border border-4 border-danger' alt="profilepic" />
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li onClick={goToAddProduct} className='d-flex align-items-center border-1 border-secondary border-bottom'>
+                    <li onClick={goToAddProduct} className='d-flex align-items-center'>
                       <button class="btn shadow-none px-2 pe-2 py-4 d-flex align-items-center">
                         <div>
                           <img src={productAddIcon} width="40" height="40" alt="profile" />
@@ -331,7 +359,7 @@ function NavigationBar() {
                         </div>
                       </button>
                     </li>
-                    <li onClick={goToAddTopping} className='d-flex align-items-center border-1 border-secondary border-bottom'>
+                    <li onClick={goToAddTopping} className='d-flex align-items-center'>
                       <button class="btn shadow-none px-2 ps-2 py-4 d-flex align-items-center">
                         <div>
                           <img src={toppingAddIcon} width="40" height="40" alt="profile" />
@@ -341,7 +369,7 @@ function NavigationBar() {
                         </div>
                       </button>
                     </li>
-                    <li onClick={logout} className='d-flex border-1 border-secondary border-top'>
+                    <li onClick={logout} className='d-flex border-3 border-secondary border-top'>
                       <button class="btn shadow-none px-3 pe-5 py-4 d-flex align-items-center">
                         <div>
                           <img src={logoutImg} width="40" height="40" alt="logout" />
