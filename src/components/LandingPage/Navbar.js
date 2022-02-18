@@ -12,6 +12,8 @@ import img from './img/logo.svg'
 import cart from './img/cart.svg'
 import profilePic from './img/erisqu.jpg'
 import profile from './img/profile.svg'
+import productAddIcon from './img/product.svg'
+import toppingAddIcon from './img/topping.svg'
 import logoutImg from './img/logout.svg'
 import 'bootstrap/js/dist/dropdown'
 
@@ -260,6 +262,7 @@ function NavigationBar() {
   const [registerShow, setRegisterShow] = React.useState(false);
 
   const [state, dispatch] = useContext(UserContext);
+  console.log(state);
 
   function handleSwitchLogin(){
     setLoginShow(false)
@@ -284,6 +287,14 @@ function NavigationBar() {
     navigate("/profile")
   }
 
+  const goToAddProduct = () => {
+    navigate("/add-product")
+  }
+
+  const goToAddTopping = () => {
+    navigate("/add-topping")
+  }
+
   return (
     <Navbar>
       <Container>
@@ -298,44 +309,98 @@ function NavigationBar() {
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
-          {state.isLogin 
-          ? <Stack direction="horizontal" gap={4}>
-              <img src={cart} width="35" height="35" alt="my-cart" />
+        {
+          ( () => {
+            if(state.isLogin){
+              if(state.user.role == "Admin"){
+                //Menu admin
+              return(
+                <Stack direction="horizontal" gap={4}>
+                <div class="btn-group">
+                  <button class="btn shadow-none pe-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src={profilePic} width="60" height="60" className='rounded-circle border border-4 border-danger' alt="profilepic" />
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li onClick={goToAddProduct} className='d-flex align-items-center border-1 border-secondary border-bottom'>
+                      <button class="btn shadow-none px-2 pe-2 py-4 d-flex align-items-center">
+                        <div>
+                          <img src={productAddIcon} width="40" height="40" alt="profile" />
+                        </div>
+                        <div className='ms-2'>
+                          Add Product
+                        </div>
+                      </button>
+                    </li>
+                    <li onClick={goToAddTopping} className='d-flex align-items-center border-1 border-secondary border-bottom'>
+                      <button class="btn shadow-none px-2 ps-2 py-4 d-flex align-items-center">
+                        <div>
+                          <img src={toppingAddIcon} width="40" height="40" alt="profile" />
+                        </div>
+                        <div className='ms-2'>
+                          Add Topping
+                        </div>
+                      </button>
+                    </li>
+                    <li onClick={logout} className='d-flex border-1 border-secondary border-top'>
+                      <button class="btn shadow-none px-3 pe-5 py-4 d-flex align-items-center">
+                        <div>
+                          <img src={logoutImg} width="40" height="40" alt="logout" />
+                        </div>
+                        <div className='ms-2'>
+                          Logout
+                        </div>
+                      </button>
+                    </li> 
+                  </ul>
+                </div>
+                </Stack>
+              )
+              } else if (state.user.role == "Customer"){
+                //Menu customer
+              return(
+                <Stack direction="horizontal" gap={4}>
+                <img src={cart} width="35" height="35" alt="my-cart" />
 
-              <div class="btn-group">
-                <button class="btn shadow-none pe-0" data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src={profilePic} width="60" height="60" className='rounded-circle border border-4 border-danger' alt="profilepic" />
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                  <li onClick={goToProfile} className='d-flex align-items-center border-1 border-secondary border-bottom'>
-                    <button class="btn shadow-none px-3 pe-5 py-4 d-flex align-items-center">
-                      <div>
-                        <img src={profile} width="40" height="40" alt="profile" />
-                      </div>
-                      <div className='ms-3'>
-                        Profile
-                      </div>
-                    </button>
-                  </li>
-                  <li onClick={logout} className='d-flex border-1 border-secondary border-top'>
-                    <button class="btn shadow-none px-4 pe-5 py-4 d-flex align-items-center">
-                      <div>
-                        <img src={logoutImg} width="40" height="40" alt="logout" />
-                      </div>
-                      <div className='ms-2'>
-                        Logout
-                      </div>
-                    </button>
-                    
-                  </li>  
-                </ul>
-              </div>
-            </Stack>
-          : <Stack direction="horizontal" gap={3}>
-              <Button value="login" className='px-5' variant="outline-danger" onClick={() => setLoginShow(true)}>Login</Button>{' '}
-              <Button value="register" className='px-5 bg-2' variant="danger" onClick={() => setRegisterShow(true)}>Register</Button>{' '}
-            </Stack>
-          }
+                <div class="btn-group">
+                  <button class="btn shadow-none pe-0" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src={profilePic} width="60" height="60" className='rounded-circle border border-4 border-danger' alt="profilepic" />
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li onClick={goToProfile} className='d-flex align-items-center border-1 border-secondary border-bottom'>
+                      <button class="btn shadow-none px-3 pe-5 py-4 d-flex align-items-center">
+                        <div>
+                          <img src={profile} width="40" height="40" alt="profile" />
+                        </div>
+                        <div className='ms-3'>
+                          Profile
+                        </div>
+                      </button>
+                    </li>
+                    <li onClick={logout} className='d-flex border-1 border-secondary border-top'>
+                      <button class="btn shadow-none px-4 pe-5 py-4 d-flex align-items-center">
+                        <div>
+                          <img src={logoutImg} width="40" height="40" alt="logout" />
+                        </div>
+                        <div className='ms-2'>
+                          Logout
+                        </div>
+                      </button>
+                    </li>  
+                  </ul>
+                </div>
+                </Stack>
+              )}
+            } else {
+              //Menu login register
+              return(
+                <Stack direction="horizontal" gap={3}>
+                  <Button value="login" className='px-5' variant="outline-danger" onClick={() => setLoginShow(true)}>Login</Button>{' '}
+                  <Button value="register" className='px-5 bg-2' variant="danger" onClick={() => setRegisterShow(true)}>Register</Button>{' '}
+                </Stack>
+              )
+            }
+          })()
+        }
         </Navbar.Collapse>
       </Container>
 
