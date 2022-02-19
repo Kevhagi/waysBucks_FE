@@ -4,7 +4,7 @@ import QR from './img/QR.svg'
 import Logo from '../LandingPage/img/logo.svg'
 import Product1 from '../LandingPage/img/Product1.png'
 
-function ProfileInfo() {
+function ProfileInfo({item}) {
   return(
     <div className='container d-flex my-4'>
         {/* My Profile */}
@@ -17,11 +17,11 @@ function ProfileInfo() {
                 <div className='col-8'>
                     <div className='mb-5'>
                         <p className='fw-bold'>Full Name</p>
-                        <p>Yurete</p>
+                        <p>{item.fullName}</p>
                     </div>
                     <div className=''>
                         <p className='fw-bold'>Email</p>
-                        <p>Email@email.com</p>
+                        <p>{item.email}</p>
                     </div>
                 </div>
             </div>
