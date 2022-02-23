@@ -559,7 +559,7 @@ function Details() {
     const response = await API.post("/addtocart", body, config)
 
     if (response?.status == 200) {
-      alert("Product successfully added to cart!")
+      alert(response.data.message)
     }
   }
 

@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Product1 from '../ProductDetails/img/Product1.png'
 import Bin from './img/Bin.svg'
 import Invoice from './img/Invoice.svg'
 
+import { API } from "../../config/api";
+
 function CartInfo() {
-  return(
+
+    const getOnCart = async () => {
+        try {
+            const response = await API.get("/getcart")
+            console.log(response);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getOnCart();
+      }, []);
+
+    return(
         <div className='container px-5'>
             <h2 className='color1 fw-bold'>My Cart</h2>
 
