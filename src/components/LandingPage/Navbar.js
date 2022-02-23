@@ -65,7 +65,7 @@ function MyLoginModal(props) {
         if (response.data.data.user.role == "Admin") {
           navigate("/transactions");
         } else {
-          navigate("/");
+          navigate("/profile");
         }
 
         /*
@@ -290,6 +290,10 @@ function NavigationBar() {
     navigate("/add-topping")
   }
 
+  const goToCart = () => {
+    navigate("/cart")
+  }
+
   return (
     <Navbar>
       <Container>
@@ -387,7 +391,9 @@ function NavigationBar() {
                 //Menu customer
               return(
                 <Stack direction="horizontal" gap={4}>
-                <img src={cart} width="35" height="35" alt="my-cart" />
+                <div onClick={goToCart} style={{cursor:"pointer"}}>
+                  <img src={cart} width="35" height="35" alt="my-cart" />  
+                </div>
 
                 <div class="btn-group">
                   <button class="btn shadow-none pe-0" data-bs-toggle="dropdown" aria-expanded="false">
