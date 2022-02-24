@@ -1,24 +1,68 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Product1 from '../ProductDetails/img/Product1.png'
 import Bin from './img/Bin.svg'
 import Invoice from './img/Invoice.svg'
+import convertRupiah from "rupiah-format";
 
 import { API } from "../../config/api";
 
 function CartInfo() {
 
+    const [onCart, setOnCart] = useState([])
+
     const getOnCart = async () => {
         try {
             const response = await API.get("/getcart")
-            console.log(response);
+            var data = response.data.data.onCart
+            setOnCart(data)
         } catch (error) {
             console.log(error);
         }
     }
 
+    var jumlahPerProduct = []
+    var jumlahPerOrder = []
+
+    var Total = []
+
+    for (let i = 0; i < onCart.length; i++) {
+        
+        for (let j = 0; j < onCart[i].order[0].topping.length; j++){
+            //console.log(`onCart[${i}].topping[${j}].price : `,onCart[i].order[0].topping[j].toppingPrice);
+            jumlahPerProduct.push(onCart[i].order[0].topping[j].toppingPrice)
+        }
+        var jumlah = jumlahPerProduct.reduce((partialSum, a) => partialSum + a, 0)
+        jumlahPerOrder.push(jumlah)
+        jumlahPerProduct.splice(0,jumlahPerProduct.length)
+
+        //var subtotal =  + jumlahPerProduct[i]
+        var hargaProduct = onCart[i].order[0].productPrice
+        var hargaTopping = jumlahPerOrder[i]
+        var subtotal = hargaProduct + hargaTopping
+        //console.log(`subtotal ${i} : `,subtotal);
+        Total.push(subtotal)
+        //console.log(`productPrice ${i} : `,onCart[i].order[0].productPrice);
+        //console.log(`toppingPrice ${i} : `,jumlahPerOrder[i]);
+
+        //console.log("jumlahPerOrder : ",jumlahPerOrder)
+    }
+
+    console.log(onCart);
+
+    
+
     useEffect(() => {
         getOnCart();
       }, []);
+      
+    const handleClick = async (id) => {
+        const response = await API.delete(`/transaction/${id}`)
+        alert("Order removed from cart!")
+        if (response?.status == 200) {            
+            console.log(`Order ${id} berhasil dihapus`);
+            console.log(response);
+          }
+    }
 
     return(
         <div className='container px-5'>
@@ -31,28 +75,36 @@ function CartInfo() {
                 {/* My Cart */}
                 <div className='col-8 me-5'>
                     <div className='border-top border-bottom mb-5'>
-                        <div className='d-flex col my-3'>
-                            <img src={Product1} alt="" width={80} className='rounded-3 me-3'/>
-                            <div>
-                                <p className='color1 fw-bold'>Ice Coffe Palm Sugar</p>
-                                <p className='color2'>Toping : Bill Berry Boba, Bubble Tea Gelatin</p>
-                            </div>
-                            <div className='d-flex col flex-column align-items-end'>
-                                <p className='color1'>Rp.33.000</p>
-                                <img src={Bin} alt="" width={20}/>
-                            </div>
-                        </div>
-                        <div className='d-flex col my-3'>
-                            <img src={Product1} alt="" width={80} className='rounded-3 me-3'/>
-                            <div>
-                                <p className='color1 fw-bold'>Ice Coffe Palm Sugar</p>
-                                <p className='color2'>Toping : Bill Berry Boba, Bubble Tea Gelatin</p>
-                            </div>
-                            <div className='d-flex col flex-column align-items-end'>
-                                <p className='color1'>Rp.33.000</p>
-                                <img src={Bin} alt="" width={20}/>
-                            </div>
-                        </div>
+                        {onCart.length !== 0 ? (
+                            <>
+                                {onCart.map((item, index) => (
+                                    <div key={index} className='d-flex col my-3'>
+                                        <img src={Product1} alt="" width={80} height={120} className='rounded-3 me-3'/>
+                                        <div>
+                                            <p className='color1 fw-bold'>{item.order[0].productName}</p>
+                                            <>
+                                                {item.order[0].topping.length !== 0 ? (
+                                                    <>
+                                                    {item.order[0].topping.map((isiTopping, index) => (
+                                                        <p className='color2'>{isiTopping.toppingName}</p>
+                                                    ))}
+                                                    </>
+                                                ) : (
+                                                    <p className='color2'>Topping : -</p>
+                                                )}
+                                            </>
+                                            
+                                        </div>
+                                        <div className='d-flex col flex-column align-items-end'>
+                                            <p className='color1'>{convertRupiah.convert(item.order[0].productPrice + jumlahPerOrder[index])}</p>
+                                            <img src={Bin} alt="" width={20} style={{cursor:"pointer"}} />
+                                        </div>
+                                    </div>
+                                ))}
+                            </>
+                        ) : (
+                            <div>Cart kosong</div>
+                        )}
                     </div>
 
                     <div className='d-flex justify-content-between'>
@@ -63,7 +115,7 @@ function CartInfo() {
                                         <p className='color1'>Subtotal</p>
                                     </div>
                                     <div>
-                                        <p className='color1'>69.000</p>
+                                        <p className='color1'>{convertRupiah.convert(Total.reduce((partialSum, a) => partialSum + a, 0))}</p>
                                     </div>
                                 </div>
                                 <div className='d-flex justify-content-between'>
@@ -71,7 +123,7 @@ function CartInfo() {
                                         <p className='color1'>Qty</p>
                                     </div>
                                     <div>
-                                        <p className='color1'>2</p>
+                                        <p className='color1'>{onCart.length}</p>
                                     </div>
                                 </div>    
                             </div>
@@ -81,7 +133,7 @@ function CartInfo() {
                                     <p className='color1 fw-bold'>Total</p>
                                 </div>
                                 <div>
-                                    <p className='color1 fw-bold'>69.000</p>
+                                    <p className='color1 fw-bold'>{convertRupiah.convert(Total.reduce((partialSum, a) => partialSum + a, 0))}</p>
                                 </div>
                             </div>
                         </div>
