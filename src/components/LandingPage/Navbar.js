@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { UserContext } from '../../context/userContext'
 import { useNavigate } from 'react-router-dom'
 
@@ -6,6 +6,7 @@ import { InputGroup, FormControl, Modal, Navbar, Container, Button, Stack } from
 import img from './img/logo.svg'
 import cart from './img/cart.svg'
 import profilePic from './img/erisqu.jpg'
+import adminPic from './img/A.png'
 import profile from './img/profile.svg'
 import productAddIcon from './img/product.svg'
 import toppingAddIcon from './img/topping.svg'
@@ -259,6 +260,18 @@ function NavigationBar() {
 
   const [state, dispatch] = useContext(UserContext);
 
+  const [onCart, setOnCart] = useState(0)
+
+  const getOnCart = async () => {
+    try {
+        const response = await API.get("/getcart")
+        var data = response.data.data.onCart
+        setOnCart(data.length)
+    } catch (error) {
+        console.log(error);
+    }
+  }
+
   function handleSwitchLogin(){
     setLoginShow(false)
     setRegisterShow(true)
@@ -293,6 +306,10 @@ function NavigationBar() {
   const goToCart = () => {
     navigate("/cart")
   }
+
+  useEffect(() => {
+    getOnCart();
+  }, []);
 
   return (
     <Navbar>
@@ -350,7 +367,7 @@ function NavigationBar() {
                 <Stack direction="horizontal" gap={4}>
                 <div class="btn-group">
                   <button class="btn shadow-none pe-0" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src={profilePic} width="60" height="60" className='rounded-circle border border-4 border-danger' alt="profilepic" />
+                    <img src={adminPic} width="60" height="60" className='rounded-circle border border-4 border-danger' alt="profilepic" />
                   </button>
                   <ul class="dropdown-menu dropdown-menu-end">
                     <li onClick={goToAddProduct} className='d-flex align-items-center'>
@@ -391,8 +408,9 @@ function NavigationBar() {
                 //Menu customer
               return(
                 <Stack direction="horizontal" gap={4}>
-                <div onClick={goToCart} style={{cursor:"pointer"}}>
-                  <img src={cart} width="35" height="35" alt="my-cart" />  
+                <div onClick={goToCart} className='pe-1' style={{cursor:"pointer", position:"relative"}}>
+                  <img src={cart} width="35" height="35" alt="my-cart" />
+                  <span className='badge bg-danger rounded-circle' style={{position:"absolute", top:"5px", right:"0", fontSize:"12px", padding:"2px 4px"}}>{onCart}</span>
                 </div>
 
                 <div class="btn-group">

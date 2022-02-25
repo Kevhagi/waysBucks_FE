@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import Product1 from '../ProductDetails/img/Product1.png'
 import Bin from './img/Bin.svg'
 import Invoice from './img/Invoice.svg'
@@ -7,6 +8,8 @@ import convertRupiah from "rupiah-format";
 import { API } from "../../config/api";
 
 function CartInfo() {
+
+    var navigate = useNavigate()
 
     const [onCart, setOnCart] = useState([])
 
@@ -26,44 +29,36 @@ function CartInfo() {
     var Total = []
 
     for (let i = 0; i < onCart.length; i++) {
-        
         for (let j = 0; j < onCart[i].order[0].topping.length; j++){
-            //console.log(`onCart[${i}].topping[${j}].price : `,onCart[i].order[0].topping[j].toppingPrice);
             jumlahPerProduct.push(onCart[i].order[0].topping[j].toppingPrice)
         }
         var jumlah = jumlahPerProduct.reduce((partialSum, a) => partialSum + a, 0)
         jumlahPerOrder.push(jumlah)
         jumlahPerProduct.splice(0,jumlahPerProduct.length)
 
-        //var subtotal =  + jumlahPerProduct[i]
         var hargaProduct = onCart[i].order[0].productPrice
         var hargaTopping = jumlahPerOrder[i]
         var subtotal = hargaProduct + hargaTopping
-        //console.log(`subtotal ${i} : `,subtotal);
-        Total.push(subtotal)
-        //console.log(`productPrice ${i} : `,onCart[i].order[0].productPrice);
-        //console.log(`toppingPrice ${i} : `,jumlahPerOrder[i]);
 
-        //console.log("jumlahPerOrder : ",jumlahPerOrder)
+        Total.push(subtotal)
     }
 
-    console.log(onCart);
+    const handleClick = async (id) => {
+        if(window.confirm("Are you sure want to remove this order?") == true){
+            const response = await API.delete(`/transaction/${id}`)
+            alert("Order removed from cart!")
 
-    
+            if (response?.status == 200) {            
+            console.log(response);
+            document.location.reload(true)
+            }
+        }
+    }
 
     useEffect(() => {
         getOnCart();
       }, []);
       
-    const handleClick = async (id) => {
-        const response = await API.delete(`/transaction/${id}`)
-        alert("Order removed from cart!")
-        if (response?.status == 200) {            
-            console.log(`Order ${id} berhasil dihapus`);
-            console.log(response);
-          }
-    }
-
     return(
         <div className='container px-5'>
             <h2 className='color1 fw-bold'>My Cart</h2>
@@ -97,7 +92,7 @@ function CartInfo() {
                                         </div>
                                         <div className='d-flex col flex-column align-items-end'>
                                             <p className='color1'>{convertRupiah.convert(item.order[0].productPrice + jumlahPerOrder[index])}</p>
-                                            <img src={Bin} alt="" width={20} style={{cursor:"pointer"}} />
+                                            <img onClick={()=>{handleClick(item.transactionID)}} src={Bin} alt="" width={20} style={{cursor:"pointer"}} />
                                         </div>
                                     </div>
                                 ))}
@@ -106,7 +101,8 @@ function CartInfo() {
                             <div>Cart kosong</div>
                         )}
                     </div>
-
+                    
+                    
                     <div className='d-flex justify-content-between'>
                         <div className='col-5 px-2 py-2'>
                             <div className='border-top border-bottom py-2'>
@@ -139,13 +135,13 @@ function CartInfo() {
                         </div>
 
                         <div className='col-5 d-flex justify-content-end'>
-                            <img src={Invoice} alt="" style={{width:"100%"}}/>
+                            <img src={Invoice} alt="" style={{width:"100%", cursor:"pointer"}}/>
                         </div>
                     </div>
                         
-
-                    
                 </div>
+
+                
                     
 
                 {/* Delivery Info */}
