@@ -12,6 +12,7 @@ function AddProductBody() {
     productPrice: "",
     productImage: ""
     });
+    console.log(form);
 
     // Handle change data on form
     const handleChange = (e) => {

@@ -65,8 +65,10 @@ function MyLoginModal(props) {
         // Status check
         if (response.data.data.user.role == "Admin") {
           navigate("/transactions");
+          document.location.reload(true)
         } else {
           navigate("/profile");
+          document.location.reload(true)
         }
 
         /*
