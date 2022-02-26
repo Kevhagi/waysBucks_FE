@@ -13,14 +13,11 @@ function CartInfo() {
 
     //get raw data for displaying orders
     const [onCart, setOnCart] = useState([])
-    console.log(onCart);
 
     var idOnCart = []
     onCart.forEach((item, index) => {
         idOnCart.push(item.transactionID)
     });
-    console.log("idOnCart : ",idOnCart);
-    
 
     //get clean data for processing transaction
     const [onCartOther, setOnCartOther] = useState([])
@@ -35,12 +32,22 @@ function CartInfo() {
         transactionImage : ""
     });
 
+    //console.log(form.transactionImage[0].name);
+
+    const [preview, setPreview] = useState(null); //For image preview
+
     // Handle change data on form
     const handleChange = (e) => {
         setForm({
           ...form,
           [e.target.name]: e.target.type === "file" ? e.target.files : e.target.value,
         });
+
+        // Create image url for preview
+        if (e.target.type === "file") {
+            let url = URL.createObjectURL(e.target.files[0]);
+            setPreview(url);
+        }
     }
 
     const getOnCartOther = async () => {
@@ -95,7 +102,7 @@ function CartInfo() {
           }
 
         } catch (error) {
-            console.log(error.response);
+            let errorAlert = error.response.data.error.message
         }
     };
 
@@ -167,7 +174,7 @@ function CartInfo() {
                             <>
                                 {onCart.map((item, index) => (
                                     <div key={index} className='d-flex col my-3'>
-                                        <img src={Product1} alt="" width={80} height={120} className='rounded-3 me-3'/>
+                                        <img src={item.order[0].productImage} alt="" width={80} height={120} className='rounded-3 me-3'/>
                                         <div>
                                             <p className='color1 fw-bold'>{item.order[0].productName}</p>
                                             <>
@@ -228,8 +235,12 @@ function CartInfo() {
 
                         
 
-                        <div className='col-5 d-flex justify-content-end'>
-                            <img onClick={()=>{selectUploadImage()}} src={Invoice} alt="" style={{width:"100%", cursor:"pointer"}} />
+                        <div onClick={()=>{selectUploadImage()}} className='col-5 d-flex justify-content-end'>
+                            {form.transactionImage !== "" ?
+                                <img src={preview} className="border border-3 border-danger rounded" alt="" style={{width:"100%", cursor:"pointer"}} />
+                            :
+                                <img src={Invoice} alt="" style={{width:"100%", cursor:"pointer"}} />
+                            }
                             <input
                                 style={{display:'none'}}
                                 id='uploadImage'
@@ -238,8 +249,7 @@ function CartInfo() {
                                 onChange={handleChange}
                             />
                         </div>
-                    </div>
-                        <p className='d-flex justify-content-end'>test</p>
+                    </div>                        
                 </div>
 
                 {/* Delivery Info */}
@@ -251,6 +261,7 @@ function CartInfo() {
                             placeholder='Name'
                             name='nameOrder'
                             onChange={handleChange}
+                            required
                         />
                         <input 
                             className='col-12 px-2 py-2 bg-1 border-2 border-danger rounded-3 mb-3'
@@ -258,6 +269,7 @@ function CartInfo() {
                             placeholder='Email'
                             name='emailOrder'
                             onChange={handleChange}
+                            required
                         />
                         <input 
                             className='col-12 px-2 py-2 bg-1 border-2 border-danger rounded-3 mb-3'
@@ -265,6 +277,7 @@ function CartInfo() {
                             placeholder='Phone'
                             name='phoneOrder'
                             onChange={handleChange}
+                            required
                         />
                         <input
                             className='col-12 px-2 py-2 bg-1 border-2 border-danger rounded-3 mb-3'
@@ -272,12 +285,14 @@ function CartInfo() {
                             placeholder='Pos Code'
                             name='postCodeOrder'
                             onChange={handleChange}
+                            required
                         />
                         <textarea
                             className='col-12 px-2 py-2 bg-1 border-2 border-danger rounded-3 mb-3'
                             placeholder='Address'
                             name='addressOrder'
-                            onChange={handleChange}  
+                            onChange={handleChange}
+                            required
                         ></textarea>
                         
                         <button className='col-12 py-2 rounded-3 bg-2 text-white fw-bold'>Pay</button>
