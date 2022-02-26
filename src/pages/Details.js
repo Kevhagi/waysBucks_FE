@@ -59,7 +59,6 @@ function Details() {
 
       //get all topping which checked
       const selectedTopping = topping.filter(isi => isi.checked === true)
-      //console.log("selectedTopping : ",selectedTopping);
 
       //map checked topping to get only toppingPrice
       let result = selectedTopping.map(a => a.toppingPrice)
@@ -94,11 +93,8 @@ function Details() {
       userID : state.user.id
     }
 
-    console.log(orderan);
-
     const config = {
       headers : {
-        'Access-Control-Allow-Origin': '*',
         "Content-type" : "application/json"
       }
     }

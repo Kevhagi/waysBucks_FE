@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'
 import Product1 from '../ProductDetails/img/Product1.png'
 import Bin from './img/Bin.svg'
 import Invoice from './img/Invoice.svg'
@@ -8,8 +9,18 @@ import { API } from "../../config/api";
 
 function CartInfo() {
 
+    let navigate = useNavigate()
+
     //get raw data for displaying orders
     const [onCart, setOnCart] = useState([])
+    console.log(onCart);
+
+    var idOnCart = []
+    onCart.forEach((item, index) => {
+        idOnCart.push(item.transactionID)
+    });
+    console.log("idOnCart : ",idOnCart);
+    
 
     //get clean data for processing transaction
     const [onCartOther, setOnCartOther] = useState([])
@@ -31,7 +42,6 @@ function CartInfo() {
           [e.target.name]: e.target.type === "file" ? e.target.files : e.target.value,
         });
     }
-
 
     const getOnCartOther = async () => {
         try {
@@ -64,58 +74,30 @@ function CartInfo() {
           formData.set("postCodeOrder", form.postCodeOrder)
           formData.set("addressOrder", form.addressOrder)
           
-
-
           onCartOther.products_order.forEach((value, indexLuar) => {
             formData.set(`products_order[${indexLuar}][productID]`,value.productID)
             value.toppings_order.forEach((topping, indexDalem) => {
                 formData.set(`products_order[${indexLuar}][toppings_order][${indexDalem}]`,value.toppings_order[indexDalem])    
             })
           });
-
-
     
           // Insert product data
           const response = await API.post('/transaction', formData, config)
 
           if(response?.status == 200){
-            //Clear data after insert
-            let clearForm = () => { 
-            document.getElementById("inputTransaction").reset();
-            setForm({
-                nameOrder: "",
-                emailOrder: "",
-                phoneOrder: "",
-                postCodeOrder : "",
-                addressOrder : "",
-                transactionImage : ""
-            })
-            }
+            //delete transaction on cart
+            idOnCart.forEach((item, index) => {
+                API.delete(`/transaction/${item}`)   
+            });
+
             alert("Transaction successfully added to database!")
-            clearForm()
+            navigate("/profile")
           }
 
         } catch (error) {
             console.log(error.response);
-            /*
-            let errorAlert1 = error.response.data.message
-            if (errorAlert1) {
-                return alert(errorAlert1)
-            }
-            let errorAlert2 = error.response.data.error.message
-            errorAlert2 = errorAlert2.replace('"productName"', 'Product name')
-            errorAlert2 = errorAlert2.replace('"productPrice"', 'Product price')
-            if (errorAlert2) {
-                return alert(errorAlert2)
-            }
-            */
         }
     };
-
-
-
-
-    
 
     const getOnCart = async () => {
         try {
