@@ -18,7 +18,35 @@ function TransactionsBody() {
         }
     }
 
-    console.log("allTransactions : ",allTransactions);
+    const handleApprove = async (id) => {
+        const body = {status : 'On The Way'}
+        const response = await API.patch(`/transaction/${id}`, body)
+        alert(`Order ${id} on the way!`)
+
+        if (response?.status == 200) {            
+        document.location.reload(true)
+        }
+    }
+
+    const handleCancel = async (id) => {
+        const body = {status: 'Cancel'}
+        const response = await API.patch(`/transaction/${id}`, body)
+        alert(`Order ${id} cancelled!`)
+
+        if (response?.status == 200) {            
+        document.location.reload(true)
+        }
+    }
+
+    const handleSuccess = async (id) => {
+        const body = {status: 'Success'}
+        const response = await API.patch(`/transaction/${id}`, body)
+        alert(`Order ${id} done!`)
+
+        if (response?.status == 200) {            
+        document.location.reload(true)
+        }
+    }
 
     useEffect(() => {
         getTransactions()
@@ -51,13 +79,13 @@ function TransactionsBody() {
                                     <td>{item.nameOrder}</td>
                                     <td>{item.addressOrder}</td>
                                     <td>{item.postCodeOrder}</td>
-                                    <td className='text-primary'>69.000</td>
+                                    <td className='text-primary'>{item.totalAmount}</td>
                                     {item.status === 'Waiting Approve' ?
                                     <>
                                         <td className='text-warning'>{item.status}</td>
                                         <td className='d-flex justify-content-center'>
-                                        <Button value="cancel" className='px-3 py-0 mx-2' variant="danger">Cancel</Button>
-                                        <Button value="cancel" className='px-2 py-0 mx-2' variant="success">Approve</Button>
+                                        <Button onClick={()=>{handleCancel(item.id)}} className='px-3 py-0 mx-2' variant="danger">Cancel</Button>
+                                        <Button onClick={()=>{handleApprove(item.id)}} className='px-2 py-0 mx-2' variant="success">Approve</Button>
                                         </td>
                                     </>
                                     :
@@ -84,7 +112,7 @@ function TransactionsBody() {
                                                 <>
                                                     <td className='text-info'>{item.status}</td>
                                                     <td className='d-flex justify-content-center'>
-                                                    <img src={Success} alt="" />
+                                                    <img onClick={()=>{handleSuccess(item.id)}} style={{cursor:"pointer"}} src={Success} alt="" />
                                                     </td>
                                                 </>
                                                     

@@ -68,7 +68,38 @@ function ProfileInfo({item, item2}) {
                                 <div className='col-4 d-flex flex-column align-items-center'>
                                     <img className='mb-5' src={Logo} alt="" style={{width:100}}/>
                                     <img className='mb-5' src={QR} alt="" style={{width:100}}/>
-                                    <p className='mb-5 fw-bold' style={{background: "lightCyan", width : "70%", textAlign : "center", color:"#00D1FF"}}>{scarlet.status}</p>
+                                    {scarlet.status === 'Waiting Approve' ?
+                                    <>
+                                        <p className='mb-5 fw-bold' style={{background: "#ffc994", width : "70%", textAlign : "center", color:"#ff8000"}}>{scarlet.status}</p>
+                                    </>
+                                    :
+                                        <>
+                                        {scarlet.status === 'Success' ?
+                                        <>
+                                            <p className='mb-5 fw-bold' style={{background: "#bdffc4", width : "70%", textAlign : "center", color:"#26ff40"}}>{scarlet.status}</p>
+                                        </>
+                                        :
+                                            <>
+                                            {scarlet.status === 'Cancel' ?
+                                            <>
+                                                <p className='mb-5 fw-bold' style={{background: "#fc9f9f", width : "70%", textAlign : "center", color:"#ff0000"}}>{scarlet.status}</p>
+                                            </>
+                                            :
+                                                <>
+                                                {scarlet.status === 'On The Way' ?
+                                                <>
+                                                    <p className='mb-5 fw-bold' style={{background: "lightCyan", width : "70%", textAlign : "center", color:"#00D1FF"}}>{scarlet.status}</p>
+                                                </>
+                                                    
+                                                :
+                                                    <></>
+                                                }
+                                                </>
+                                            }
+                                            </>
+                                        }
+                                        </>
+                                    }
                                     <p className='color2 fw-bold mb-5'>Sub Total : {scarlet.totalAmount}</p>
                                 </div>
                             </div>
