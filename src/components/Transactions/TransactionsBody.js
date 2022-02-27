@@ -1,10 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/esm/Button';
 import Failed from './img/failed.svg'
 import Success from './img/success.svg'
 
+import { API } from '../../config/api'
+
 function TransactionsBody() {
-  return(
+
+    const [allTransactions, setAllTransactions] = useState([])
+
+    const getTransactions = async () => {
+        try {
+            const response = await API.get("/transactions")
+            setAllTransactions(response.data.data.transactions)
+        } catch (error) {
+            console.log(error.response);
+        }
+    }
+
+    console.log("allTransactions : ",allTransactions);
+
+    useEffect(() => {
+        getTransactions()
+    }, [])
+
+    return(
     <div className='container'>
         <h2 className='color1 my-5'>Income transaction</h2>
         
@@ -21,54 +41,75 @@ function TransactionsBody() {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Sugeng No Pants</td>
-                    <td>Cileungsi</td>
-                    <td>16820</td>
-                    <td className='text-primary'>69.000</td>
-                    <td className='text-warning'>Waiting Approve</td>
-                    <td className='d-flex justify-content-center'>
-                        <Button value="cancel" className='px-3 py-0 mx-2' variant="danger">Cancel</Button>
-                        <Button value="cancel" className='px-2 py-0 mx-2' variant="success">Approve</Button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Haris Gams</td>
-                    <td>Serang</td>
-                    <td>42111</td>
-                    <td className='text-primary'>30.000</td>
-                    <td className='text-success'>Success</td>
-                    <td className='d-flex justify-content-center'>
-                        <img src={Success} alt="" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Aziz Union</td>
-                    <td>Bekasi</td>
-                    <td>13450</td>
-                    <td className='text-primary'>28.000</td>
-                    <td className='text-danger'>Cancel</td>
-                    <td className='d-flex justify-content-center'>
-                    <img src={Failed} alt="" />
-                    </td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>Lae Tanjung Balai</td>
-                    <td>Tanjung Balai</td>
-                    <td>21331</td>
-                    <td className='text-primary'>30.000</td>
-                    <td className='text-info'>On The Way</td>
-                    <td className='d-flex justify-content-center'>
-                    <img src={Success} alt="" />
-                    </td>
-                </tr>
+                {allTransactions.length !== 0 ? (
+                    <>
+                        {allTransactions.map((item, index) => {
+                            if (item.status !== 'On Cart') {
+                            return (
+                                <tr>
+                                    <td>{index+1}</td>
+                                    <td>{item.nameOrder}</td>
+                                    <td>{item.addressOrder}</td>
+                                    <td>{item.postCodeOrder}</td>
+                                    <td className='text-primary'>69.000</td>
+                                    {item.status === 'Waiting Approve' ?
+                                    <>
+                                        <td className='text-warning'>{item.status}</td>
+                                        <td className='d-flex justify-content-center'>
+                                        <Button value="cancel" className='px-3 py-0 mx-2' variant="danger">Cancel</Button>
+                                        <Button value="cancel" className='px-2 py-0 mx-2' variant="success">Approve</Button>
+                                        </td>
+                                    </>
+                                    :
+                                        <>
+                                        {item.status === 'Success' ?
+                                        <>
+                                            <td className='text-success'>{item.status}</td>
+                                            <td className='d-flex justify-content-center'>
+                                            <img src={Success} alt="" />
+                                            </td>
+                                        </>
+                                        :
+                                            <>
+                                            {item.status === 'Cancel' ?
+                                            <>
+                                                <td className='text-danger'>{item.status}</td>
+                                                <td className='d-flex justify-content-center'>
+                                                <img src={Failed} alt="" />
+                                                </td>
+                                            </>
+                                            :
+                                                <>
+                                                {item.status === 'On The Way' ?
+                                                <>
+                                                    <td className='text-info'>{item.status}</td>
+                                                    <td className='d-flex justify-content-center'>
+                                                    <img src={Success} alt="" />
+                                                    </td>
+                                                </>
+                                                    
+                                                :
+                                                    <>
+                                                    <td></td>
+                                                    <td></td>
+                                                    </>
+                                                }
+                                                </>
+                                            }
+                                            </>
+                                        }
+                                        </>
+                                    }                                    
+                                </tr>
+                            )    
+                            }
+                        })}
+                    </>
+                ) : (
+                    <div>Data kosong</div>
+                )}
             </tbody>
         </table>
-
     </div>
   )
 }

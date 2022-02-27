@@ -32,8 +32,6 @@ function CartInfo() {
         transactionImage : ""
     });
 
-    //console.log(form.transactionImage[0].name);
-
     const [preview, setPreview] = useState(null); //For image preview
 
     // Handle change data on form
@@ -80,6 +78,7 @@ function CartInfo() {
           formData.set("phoneOrder", form.phoneOrder)
           formData.set("postCodeOrder", form.postCodeOrder)
           formData.set("addressOrder", form.addressOrder)
+          formData.set("totalAmount", TotalAkhir)
           
           onCartOther.products_order.forEach((value, indexLuar) => {
             formData.set(`products_order[${indexLuar}][productID]`,value.productID)
@@ -116,9 +115,11 @@ function CartInfo() {
         }
     }
 
+    //Topping only
     var jumlahPerProduct = []
     var jumlahPerOrder = []
 
+    //Topping + product
     var Total = []
 
     for (let i = 0; i < onCart.length; i++) {
@@ -154,6 +155,8 @@ function CartInfo() {
             console.log(error);
         }
     }
+
+    var TotalAkhir = Total.reduce((partialSum, a) => partialSum + a, 0)
 
     useEffect(() => {
         getOnCart();
@@ -228,7 +231,7 @@ function CartInfo() {
                                     <p className='color1 fw-bold'>Total</p>
                                 </div>
                                 <div>
-                                    <p className='color1 fw-bold'>{convertRupiah.convert(Total.reduce((partialSum, a) => partialSum + a, 0))}</p>
+                                    <p className='color1 fw-bold'>{convertRupiah.convert(TotalAkhir)}</p>
                                 </div>
                             </div>
                         </div>

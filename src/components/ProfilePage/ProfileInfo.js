@@ -36,22 +36,15 @@ function ProfileInfo({item, item2}) {
             {item2.length !== 0 ? (
                 <>
                     {item2.map((scarlet, index) => {
-                        
-                        let productPrice = []
-                        let toppingPrice
                         if (scarlet.status !== 'On Cart') {
                         return (
                             <div className='row pink rounded-3 py-3 mb-4'>
-                                <p className='fw-bold text-danger'>Transaction ID : {scarlet.id}</p>
-
                                 <div className='col-8'>
                                     {scarlet.order.map((vodka, index) => {
                                         var test = scarlet.createdAt
                                         var day = dateFormat(test, "dddd")
                                         var date = dateFormat(test, "dd mmmm yyyy")
                                         let a = []
-                                        toppingPrice = a
-                                        productPrice.push(vodka.price)
                                         return (
                                             <div className='col d-flex mb-4'>
                                                 <div className='d-flex align-items-start px-2 py-2'>
@@ -76,7 +69,7 @@ function ProfileInfo({item, item2}) {
                                     <img className='mb-5' src={Logo} alt="" style={{width:100}}/>
                                     <img className='mb-5' src={QR} alt="" style={{width:100}}/>
                                     <p className='mb-5 fw-bold' style={{background: "lightCyan", width : "70%", textAlign : "center", color:"#00D1FF"}}>{scarlet.status}</p>
-                                    <p className='color2 fw-bold mb-5'>Sub Total : {productPrice.reduce((partialSum, a) => partialSum + a, 0) + toppingPrice.reduce((partialSum, a) => partialSum + a, 0)}</p>
+                                    <p className='color2 fw-bold mb-5'>Sub Total : {scarlet.totalAmount}</p>
                                 </div>
                             </div>
                         )    

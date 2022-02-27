@@ -21,8 +21,6 @@ function Profile() {
       console.log(error.response);
     }
   }
-
-  console.log(myTransactions);
   
   useEffect(() => {
     getUserTransactions();
