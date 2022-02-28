@@ -75,7 +75,7 @@ function TransactionsBody() {
                             if (item.status !== 'On Cart') {
                             return (
                                 <tr>
-                                    <td>{index+1}</td>
+                                    <td>{item.id}</td>
                                     <td>{item.nameOrder}</td>
                                     <td>{item.addressOrder}</td>
                                     <td>{item.postCodeOrder}</td>
